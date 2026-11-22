@@ -1,14 +1,18 @@
 {
-  "name": "call-sheet",
+  "name": "call-sheet-kit",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "One typed call sheet, three outputs: print PDF, per-crew email, group-chat PNG. Built with Hyper Elements.",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "render:pdf": "tsx scripts/render-pdf.tsx",
+    "render:email": "tsx scripts/render-email.tsx",
+    "preview:email": "tsx scripts/render-email.tsx --preview",
+    "render:card": "tsx scripts/render-card.tsx",
+    "render": "npm run render:pdf && npm run render:email && npm run render:card",
+    "typecheck": "tsc --noEmit"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "cipoklean",
+  "license": "MIT",
   "dependencies": {
     "@hyper-elements/email-clients": "^0.5.3",
     "@hyper-elements/react": "^0.5.2",
