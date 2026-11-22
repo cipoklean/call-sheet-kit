@@ -13,8 +13,10 @@
     "@hyper-elements/email-clients": "^0.5.3",
     "@hyper-elements/react": "^0.5.2",
     "@react-pdf/renderer": "^4.9.0",
+    "@resvg/resvg-js": "^2.6.2",
     "react": "^19.3.1",
-    "react-dom": "^19.3.1"
+    "react-dom": "^19.3.1",
+    "satori": "^0.33.5"
   },
   "devDependencies": {
     "@hyper-elements/cli": "^0.3.3",
