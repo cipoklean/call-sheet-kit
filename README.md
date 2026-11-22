@@ -33,7 +33,7 @@ Every shoot day a 2nd AD rebuilds the same information three times: a PDF for th
 
 ### One email, fifteen recipients
 
-The email is rendered once. `render()` writes each `MergeTag` in `{{name}}` syntax, so the same HTML drops into Mailchimp, Postmark or SendGrid. For a local test, the script fills the tags (with HTML escaping) for every department crew member in `departments[].crew` — 15 emails, including per-person notes like Eli Brooks's prop note via `{{crew_note}}` (cast calls live in the PDF) — and writes `out/email/crew/<name>.html`:
+The email is rendered once. `render()` writes each `MergeTag` in `{{name}}` syntax, so the same HTML drops into Mailchimp, Postmark or SendGrid. For local testing, the script fills the tags (HTML-escaped) for all 15 department crew members in `departments[].crew` and writes `out/email/crew/<name>.html`. Per-person notes like Eli Brooks's prop note come through `{{crew_note}}`; cast calls live in the PDF.
 
 ```tsx
 <Text>
@@ -46,7 +46,7 @@ The email is rendered once. `render()` writes each `MergeTag` in `{{name}}` synt
 
 ### What the client checks found
 
-`render(email, { plugins: [await emailClients()] })` finds no errors or warnings. Its info notes report that classic Outlook draws square corners, draws weight 500 as regular, skips letter spacing, and ignores button hover states (as do Outlook.com and Outlook for Mac); `gmail-app-other` keeps desktop styles on phones (though `Row`s still stack); and web fonts load in Apple Mail while falling back to Arial and Courier New elsewhere. The design was built so none of those lose hierarchy: emphasis comes from 600 weight and size, not corners or tracking.
+`render(email, { plugins: [await emailClients()] })` finds no errors or warnings. Its info notes report that classic Outlook draws square corners, renders weight 500 as regular, skips letter spacing, and ignores button hover states (as do Outlook.com and Outlook for Mac). Elsewhere, `gmail-app-other` keeps desktop styles on phones (though `Row`s still stack), and web fonts load in Apple Mail while falling back to Arial and Courier New in other clients. The design was built so none of those lose hierarchy: emphasis comes from 600 weight and size, not corners or tracking.
 
 Fixes made after reading the previews:
 
@@ -93,7 +93,7 @@ src/
   types.ts      the CallSheet type
   data.ts       one fictional shoot day ("Low Tide", day 7 of 18)
   fonts.ts      typed web-font faces shared by Document and Email
-  theme.ts      the shared theme (with Register + document/email/canvas formats)
+  theme.ts      the shared theme (with Register + base and email/canvas formats)
   elements.tsx  StatBlock and DeptBlock custom elements
   pdf.tsx       Document root
   email.tsx     Email root
