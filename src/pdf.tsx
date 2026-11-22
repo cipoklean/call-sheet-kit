@@ -222,5 +222,5 @@ export function formatEighths(total: number): string {
   const whole = Math.floor(total / 8);
   const rest = total % 8;
   if (!rest) return `${whole}`;
-  return whole ? `${whole} ${rest}/8` : `${rest}/8`;
+  return whole ? `${whole}\u00a0${rest}/8` : `${rest}/8`;
 }
