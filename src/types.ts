@@ -74,4 +74,5 @@ export interface CallSheet {
   departments: Department[];
   notes: string[];
   advance: { date: string; scenes: string };
+  sheetUrl: string;
 }

@@ -4,7 +4,7 @@ Morning, {{crew_name}}. Your call is
 
 {{call_time}}
 
-{{crew_role}} · General crew call 6:30 AM · Shooting call 8:00 AM
+{{crew_role}} · General crew call 6:30 AM · Shooting call 8:00 AM{{crew_note}}
 
 Location
 
@@ -38,7 +38,7 @@ Mara reads the ledger by lamp
 4:00 PM | 41 | EXT. Parking lot
 Ruth waits in the truck, engine running
 
-Lunch 1:00 PM · Wrap around 6:30 PM · Sunset 4:44 PM · 68°/52°, rain 10%
+Lunch 1:00 PM · Wrap around 6:30 PM · Sunset 4:44 PM · 68°/52°, partly cloudy, marine layer until 10, rain 10%
 
 BEFORE YOU ARRIVE
 

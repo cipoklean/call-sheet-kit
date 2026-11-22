@@ -102,4 +102,5 @@ export const sheet: CallSheet = {
     "Closed set for scene 23. Essential crew only.",
   ],
   advance: { date: "Wednesday, December 2, 2026", scenes: "Sc. 30, 31, 33 · INT Mara's house · Call 7:00 AM" },
+  sheetUrl: "https://saltmarsh.example/low-tide/day-7.pdf",
 };

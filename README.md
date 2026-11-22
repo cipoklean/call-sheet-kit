@@ -22,42 +22,43 @@ Every shoot day a 2nd AD rebuilds the same information three times: a PDF for th
 
 | Feature | Where | What it does here |
 |---|---|---|
-| `defineTheme` | `src/theme.ts` | One theme for all three roots: colours, fonts, the heading scale, the one card style |
-| `defineElement` | `src/elements.tsx` | Two custom elements, `StatBlock` (a label over a figure) and `DeptBlock` (a department's crew and calls), with typed props |
-| `Document` + `renderPdf` | `src/pdf.tsx`, `scripts/render-pdf.tsx` | The Letter PDF, with `Table`, `Grid`, `List`, `PageFooter` and `PageNumber`. Fonts go in as bytes, no browser needed |
-| `Email` + `MergeTag` | `src/email.tsx` | A 600px email. `crew_name`, `crew_role` and `call_time` render as `{{merge_tags}}` for any sending service |
-| `validate` + `emailClients()` | `scripts/render-email.tsx` | Checks the email against 11 clients before it's written |
-| `renderInEmailClients` | `scripts/render-email.tsx --preview` | Previews in classic Outlook, Outlook.com, Gmail, the Gmail app and Apple Mail (light and dark) |
-| `Canvas` + `renderImage` | `src/card.tsx`, `scripts/render-card.tsx` | The group-chat card as PNG and SVG |
+| `defineTheme` + `Register` + `formats` | `src/theme.ts` | One typed theme for all three roots (`document`, `email`, `canvas`): colours, fonts, per-format type/spacing/radius scales, button hover state, and named styles (`card`, `invertCard`, `label`, `figure`, `muted`) |
+| Scoped `tokens` | `src/pdf.tsx`, `src/email.tsx`, `src/card.tsx` | Overrides `background`, `foreground`, and `muted` on the inverted hospital container instead of threading separate colour overrides into every child |
+| `defineElement` | `src/elements.tsx` | Two custom elements with typed props: `StatBlock` (shared by both the PDF and the card, scaling automatically via theme `formats`) and `DeptBlock` (a department's crew and calls) |
+| `Document` + `renderPdf` | `src/pdf.tsx`, `scripts/render-pdf.tsx` | The Letter PDF (`lang="en"`, web fonts for `call-sheet.print.html`, embedded TTF bytes for the PDF), with `Table`, `Grid`, `List`, `PageFooter` and `PageNumber` |
+| `Email` + `MergeTag` | `src/email.tsx` | A 600px email. `crew_name`, `crew_role`, `call_time` and `crew_note` render as `{{merge_tags}}` for any sending service |
+| `render` + `emailClients()` | `scripts/render-email.tsx` | Checks the email against 11 clients in one pass while rendering HTML and plain text |
+| `renderInEmailClients` + `mergeTag` | `scripts/render-email.tsx --preview` | Previews the `<Email>` directly in classic Outlook, Outlook.com, Gmail, the Gmail app and Apple Mail (including Apple Mail's dark preview; the sheet intentionally stays ivory-toned) |
+| `Canvas` + `fit` + `layoutImage` + `renderImage` | `src/card.tsx`, `scripts/render-card.tsx` | The 1080 × 1350 group-chat card as PNG and SVG, with auto-fitting headings (`fit`) and strict layout/glyph validation (`layoutImage`) |
 
 ### One email, fifteen recipients
 
-The email is rendered once. `render()` writes each `MergeTag` in `{{name}}` syntax, so the same HTML drops into Mailchimp, Postmark or SendGrid. For a local test, the script fills the tags for every crew member and writes `out/email/crew/<name>.html`:
+The email is rendered once. `render()` writes each `MergeTag` in `{{name}}` syntax, so the same HTML drops into Mailchimp, Postmark or SendGrid. For a local test, the script fills the tags (with HTML escaping) for every department crew member in `departments[].crew` — 15 emails, including per-person notes like Eli Brooks's prop note via `{{crew_note}}` (cast calls live in the PDF) — and writes `out/email/crew/<name>.html`:
 
 ```tsx
-<Text style={{ fontSize: 16 }}>
+<Text>
   Morning, <MergeTag name="crew_name" />. Your call is
 </Text>
-<Text style={{ fontSize: 48, color: token("colors.accent") }}>
+<Text style={{ apply: ["figure"], fontSize: 48, color: token("colors.accent") }}>
   <MergeTag name="call_time" />
 </Text>
 ```
 
 ### What the client checks found
 
-`validate(email, { plugins: [await emailClients()] })` finds no errors. Its notes say classic Outlook draws square corners, draws weight 500 as regular, and skips letter spacing. The design was built so that loses nothing: emphasis comes from 600 weight and size, not from corners or tracking. Web fonts load in Apple Mail and fall back to Arial and Courier New elsewhere.
+`render(email, { plugins: [await emailClients()] })` finds no errors or warnings. Its info notes report that classic Outlook draws square corners, draws weight 500 as regular, skips letter spacing, and ignores button hover states (as do Outlook.com and Outlook for Mac); `gmail-app-other` keeps desktop styles on phones (though `Row`s still stack); and web fonts load in Apple Mail while falling back to Arial and Courier New elsewhere. The design was built so none of those lose hierarchy: emphasis comes from 600 weight and size, not corners or tracking.
 
 Fixes made after reading the previews:
 
 - Scene descriptions moved to their own line, so table rows keep one height in Outlook
 - The Scene column widened after its header wrapped on a 345px phone
-- Non-breaking spaces between numbers and units (`6:30 AM`, `6 7/8`) so they never split across lines
+- Non-breaking spaces between numbers, units and fractions (`6:30 AM`, `1 2/8`, `6 7/8`) so they never split across lines
 
 ## Design
 
-- **Palette:** white paper, black type, one grey, one pale grey for cards. Biro blue is used once, for the general crew call. Hospital details are inverted to black instead of adding a second colour.
+- **Palette:** warm ivory paper (`#FBFBF8`), deep charcoal ink (`#141615`), one muted mineral grey (`#525852`), pale mineral cards (`#EFEFE9`). Dark pine (`#166534`) is used once for the call time (general crew call on the PDF and card; each recipient's personal call time in the email). Hospital details invert to deep charcoal (`#1A1D1B`) via scoped theme tokens instead of adding a second colour.
 - **Type:** IBM Plex Sans for text, IBM Plex Mono for every time, so columns of times line up.
-- **Rules:** sentence case labels, no tracked capitals, no coloured status chips, one radius, two boxes deep at most.
+- **Rules:** sentence case labels, no tracked capitals, no coloured status chips, one card radius token per format (`6px` in PDF/email, `16px` on the card), two boxes deep at most.
 
 ## Run it
 
@@ -76,14 +77,14 @@ npm run preview:email   # also writes email-client previews to out/email/preview
 |---|---|
 | `npm run render:pdf` | `out/call-sheet.pdf`, `out/call-sheet.print.html` |
 | `npm run render:email` | `out/email/call-sheet.email.html` (with merge tags), `.txt`, and `out/email/crew/*.html` |
-| `npm run preview:email` | The above, plus one HTML preview per client. Open them in Chrome or Chromium |
+| `npm run preview:email` | The above, plus one HTML preview per client in `out/email/previews/` (gitignored until you run this command; open them in Chrome or Chromium) |
 | `npm run render:card` | `out/call-sheet-card.png`, `out/call-sheet-card.svg` |
 
 Add `--outline` to the PDF script to print the laid-out tree: `npx tsx scripts/render-pdf.tsx --outline`.
 
 ## Make it yours
 
-Edit `src/data.ts`. It's typed against `src/types.ts`, so a missing call time or a scene with an unknown `dayNight` value fails at compile time (`npm run typecheck`).
+Edit `src/data.ts` (including `sheetUrl` for the email button, optional `episode`, `weather.summary`, and crew `note`/`phone` fields). It's typed against `src/types.ts`, so a missing call time or a scene with an unknown `dayNight` value fails at compile time (`npm run typecheck`).
 
 ## Project layout
 
@@ -91,7 +92,8 @@ Edit `src/data.ts`. It's typed against `src/types.ts`, so a missing call time or
 src/
   types.ts      the CallSheet type
   data.ts       one fictional shoot day ("Low Tide", day 7 of 18)
-  theme.ts      the shared theme
+  fonts.ts      typed web-font faces shared by Document and Email
+  theme.ts      the shared theme (with Register + document/email/canvas formats)
   elements.tsx  StatBlock and DeptBlock custom elements
   pdf.tsx       Document root
   email.tsx     Email root
