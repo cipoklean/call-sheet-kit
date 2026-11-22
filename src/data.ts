@@ -2,7 +2,7 @@ import type { CallSheet } from "./types";
 
 // Sample production. Every name, number and address here is fictional.
 export const sheet: CallSheet = {
-  production: "LOW TIDE",
+  production: "Low Tide",
   company: "Saltmarsh Pictures",
   shootDay: 7,
   totalDays: 18,
@@ -36,7 +36,7 @@ export const sheet: CallSheet = {
     distance: "2.4 mi · 7 min",
   },
   schedule: [
-    { scene: "14", setting: "EXT", location: "Pier, end of dock", description: "Mara finds the waterlogged ledger", dayNight: "DAWN", pages: "1 2/8", cast: [1], time: "8:00 AM" },
+    { scene: "14", setting: "EXT", location: "Pier, end of dock", description: "Mara finds the waterlogged ledger", dayNight: "D", pages: "1 2/8", cast: [1], time: "8:00 AM" },
     { scene: "15", setting: "EXT", location: "Pier, walkway", description: "Theo confronts Mara about the boat", dayNight: "D", pages: "2 4/8", cast: [1, 2], time: "9:30 AM" },
     { scene: "22", setting: "INT", location: "Bait shop, counter", description: "Gus refuses to sell to Theo", dayNight: "D", pages: "1 6/8", cast: [2, 3], time: "11:15 AM" },
     { scene: "23", setting: "INT", location: "Bait shop, back room", description: "Mara reads the ledger by lamp", dayNight: "N", pages: "7/8", cast: [1], time: "2:00 PM" },
@@ -96,9 +96,9 @@ export const sheet: CallSheet = {
     },
   ],
   notes: [
-    "Dawn scene 14 is time-critical: camera rolls at first light, no exceptions.",
+    "Scene 14 needs the low morning sun. First shot by 8:15 AM, so cameras are built on the dock by 7:30 AM.",
     "Life jackets required for anyone on the end of the dock.",
-    "Picture boat \"Wren\" arrives 7:30 AM; marine coordinator on set all day.",
+    "Picture boat “Wren” arrives 7:30 AM; marine coordinator on set all day.",
     "Closed set for scene 23. Essential crew only.",
   ],
   advance: { date: "Wednesday, December 2, 2026", scenes: "Sc. 30, 31, 33 · INT Mara's house · Call 7:00 AM" },

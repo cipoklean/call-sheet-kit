@@ -1,37 +1,46 @@
 import { defineTheme } from "@hyper-elements/react";
 
-// One brand for the PDF, the email and the PNG.
-// Ink-black for photocopies, one signal color for anything time-critical.
+// "Sheet and biro" (taste-skill palette white-link-blue): white paper, black type,
+// one grey for secondary lines, one pale grey step for cards, and biro blue used once,
+// for the general crew call. Safety information inverts to black instead of a second colour.
 export const callSheetTheme = defineTheme({
   colors: {
     background: "#ffffff",
     foreground: "#111111",
     primary: "#111111",
     primaryForeground: "#ffffff",
-    signal: "#e8590c", // call times, time-critical notes
-    muted: "#6b6b6b",
-    border: "#d4d4d4",
+    surface: "#f4f4f4",
+    muted: "#5f5f5f", // 6.4:1 on white, 5.9:1 on the surface
+    hairline: "#dedede",
     rule: "#111111",
-    panel: "#f4f2ee",
-    danger: "#c92a2a",
+    accent: "#1a4be0",
+    field: "#111111",
+    fieldInk: "#ffffff",
+    fieldMuted: "#b3b3b3",
   },
   fonts: {
-    body: "Inter, Helvetica, Arial, sans-serif",
-    heading: "Inter, Helvetica, Arial, sans-serif",
-    mono: "'JetBrains Mono', 'Courier New', monospace",
+    body: "'IBM Plex Sans', Helvetica, Arial, sans-serif",
+    heading: "'IBM Plex Sans', Helvetica, Arial, sans-serif",
+    mono: "'IBM Plex Mono', 'Courier New', monospace",
   },
-  fontSizes: { body: 11 },
-  lineHeights: { body: 1.35 },
+  fontSizes: { body: 10.5 },
+  lineHeights: { body: 1.45 },
+  radii: { card: 6 },
   elements: {
+    // Display weights 400/600 with tight tracking, sentence case everywhere.
     Heading: {
-      fontWeight: 800,
-      letterSpacing: -0.2,
-      by: { level: { 1: { fontSize: 30 }, 2: { fontSize: 13, textTransform: "uppercase", letterSpacing: 1.2 }, 3: { fontSize: 11 } } },
+      fontWeight: 600,
+      by: {
+        level: {
+          1: { fontSize: 36, lineHeight: 1, letterSpacing: -1.26 },
+          2: { fontSize: 15, lineHeight: 1.2, letterSpacing: -0.3 },
+        },
+      },
     },
-    Button: { borderRadius: 4, padding: [12, 20], fontWeight: 700 },
+    Button: { borderRadius: 6, padding: [12, 20], fontWeight: 600 },
   },
   styles: {
-    label: { fontSize: 8, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: "{colors.muted}" },
-    panel: { backgroundColor: "{colors.panel}", padding: 12, gap: 4, borderRadius: 4 },
+    // The one card recipe.
+    card: { backgroundColor: "{colors.surface}", padding: 12, gap: 4, borderRadius: 6 },
   },
 });
